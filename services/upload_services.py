@@ -1,7 +1,7 @@
 from pathlib import Path
 from fastapi import UploadFile
 
-# from ingestion.ingestion import ingestion_document
+from app.ingestion.ingestion import ingest_pdf
 
 Data = Path("data")
 Data.mkdir(exist_ok=True)
@@ -13,9 +13,8 @@ async def upload_document(file: UploadFile):
     with open(file_path, "wb") as buffer:
         buffer.write(await file.read())
 
+    ingest_pdf(file_path)
     return {
         "message": "File uploaded successfully",
         "filename": file.filename,
-        "saved_path": str(file_path),
-        "exists": file_path.exists(),
     }

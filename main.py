@@ -8,7 +8,9 @@ app = FastAPI(title="Customer 360 Financial Advisor API")
 
 @app.get("/")
 def root():
-    return "Hello World"
+    return {
+        "response": "Customer 360 Financial Advisor API is running",
+    }
 
 
 app.include_router(upload_router)
