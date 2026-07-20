@@ -72,6 +72,7 @@ def answer_question(user_question: str):
         {"messages": [{"role": "user", "content": user_question}]}
     )
 
+<<<<<<< HEAD
     return response["messages"][-1].content
 
 
@@ -83,3 +84,16 @@ def answer_question(user_question: str):
 #     print(response)
 # else:
 #     print(response["messages"][-1].content)
+=======
+    return response
+
+
+user_question = "My portfolio has mostly FDs. Is that a problem?"
+
+
+response = answer_question(user_question)
+if isinstance(response, str):
+    print(response)
+else:
+    print(response["messages"][-1].content)
+>>>>>>> 89dce08c1c6d15c2b21a73019337d300d46721a1

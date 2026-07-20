@@ -27,7 +27,11 @@ def ingest_pdf(file_path):
     for doc in docs:
         doc.metadata.update(
             {
+<<<<<<< HEAD
                 "source": str(file_path),
+=======
+                "source": file_path,
+>>>>>>> 89dce08c1c6d15c2b21a73019337d300d46721a1
                 "document_extension": "pdf",
                 "page": doc.metadata.get("page"),
                 "last_updated": os.path.getmtime(file_path),
@@ -53,7 +57,11 @@ def ingest_pdf(file_path):
     vector_store.add_documents(chunks)
 
 
+<<<<<<< HEAD
 # ingest_pdf("data/Capstone_Project_2_Personalized_Retail_Banking_FAQ.pdf")
+=======
+ingest_pdf("data/Capstone_Project_2_Personalized_Retail_Banking_FAQ.pdf")
+>>>>>>> 89dce08c1c6d15c2b21a73019337d300d46721a1
 
 # to run the script
 # uv run python -m app.ingestion.ingestion
