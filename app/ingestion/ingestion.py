@@ -1,12 +1,3 @@
-# Load the pdf file from the data folder
-# extract the content of the file
-# arrive at the chunking strategy
-# load the embedding model
-# embed the chunks
-# connect to postgres and activate pgvector extension
-# save the vector embeddings and original text in db
-
-# uv add python-dotenv
 from dotenv import load_dotenv
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -27,11 +18,7 @@ def ingest_pdf(file_path):
     for doc in docs:
         doc.metadata.update(
             {
-<<<<<<< HEAD
                 "source": str(file_path),
-=======
-                "source": file_path,
->>>>>>> 89dce08c1c6d15c2b21a73019337d300d46721a1
                 "document_extension": "pdf",
                 "page": doc.metadata.get("page"),
                 "last_updated": os.path.getmtime(file_path),
@@ -51,17 +38,5 @@ def ingest_pdf(file_path):
     print("Total chunks")
     print(len(chunks))
 
-    # 4 load the embedding model & 5 generate the embeddings
-    # 6. save it in vector db
     vector_store = get_vector_store(collection_name="personalized_retail_banking")
     vector_store.add_documents(chunks)
-
-
-<<<<<<< HEAD
-# ingest_pdf("data/Capstone_Project_2_Personalized_Retail_Banking_FAQ.pdf")
-=======
-ingest_pdf("data/Capstone_Project_2_Personalized_Retail_Banking_FAQ.pdf")
->>>>>>> 89dce08c1c6d15c2b21a73019337d300d46721a1
-
-# to run the script
-# uv run python -m app.ingestion.ingestion

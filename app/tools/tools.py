@@ -5,19 +5,7 @@ from app.core.db import get_vector_store
 from psycopg.rows import dict_row
 from langchain_core.tools import tool
 
-# PGVector connection string uses SQLAlchemy format: postgresql+psycopg://...
-# psycopg.connect needs standard format: postgresql://...
 _raw_conn = os.getenv("PG_CONNECTION_STRING_FTS")
-
-_KEYWORD_PATTERNS = [
-    r"[A-Z]{2,}-\d{4}-\w+",  # policy/ticket codes: POL-2024-HR-007
-    r"\b[A-Z]{2,5}\b",  # abbreviations: LTA, CTC, ESI
-    r"\d{6,}",  # long numeric IDs / employee IDs
-    r"\b[A-Z][A-Za-z]+\s+[A-Z]?\d+(?:-[A-Z0-9]+)?[A-Z]*\b",
-]
-
-
-_KEYWORD_RE = re.compile("|".join(_KEYWORD_PATTERNS))
 
 
 @tool
@@ -58,7 +46,6 @@ def search_fts(
         for row in rows
     ]
 
-    # print(output)
     return output
 
 
@@ -80,7 +67,6 @@ def search_vector(
         for doc in docs
     ]
 
-    # print(output)
     return output
 
 
@@ -93,36 +79,24 @@ def search_hybrid(
     The constant 60 prevents top-ranked outputs from dominating
     How RRF scores for a chunk = sum of 1/(rank + 60)
     """
-    # print("Running Hybrid Search")
-
     vector_search_results = search_vector.func(query, 5, collection_name)
     fts_results = search_fts.func(query, 5, collection_name)
 
     rrf_scores: dict[str, float] = {}
     chunk_map: dict[str, dict] = {}
 
-    # Walk the vector results in ranked order (best match first).
-    # enumerate gives rank 0, 1, 2... so we add +1 below to make ranks start at 1.
     for rank, doc in enumerate(vector_search_results):
         # Use the first 120 chars of the chunk text as an identity key.
         # Same chunk retrieved by both searches -> same key -> its scores add up.
         key = doc["content"][:120]
-        # RRF formula: score += 1 / (k_constant + rank). Better rank (smaller number)
-        # gives a bigger score. .get(key, 0) lets us accumulate across both loops.
         rrf_scores[key] = rrf_scores.get(key, 0) + 1 / (60 + rank + 1)
-        # Remember the full chunk so we can rebuild the final list from the winning keys.
         chunk_map[key] = {"content": doc["content"], "metadata": doc["metadata"]}
 
-    # Same pass over the FTS results. A chunk found by BOTH searches gets scored
-    # twice here, which is exactly how RRF rewards agreement between the two methods.
     for rank, item in enumerate(fts_results):
         key = item["content"][:120]
         rrf_scores[key] = rrf_scores.get(key, 0) + 1 / (60 + rank + 1)
         chunk_map[key] = {"content": item["content"], "metadata": item["metadata"]}
 
-    # this line sort the  results of our RRF calculation here so that,
-    # the higher scoring doc/chunk appear at the very top of the final list
-
+    # sort the results and higher scoring chunk appear at top of the final list
     ranked = sorted(rrf_scores.items(), key=lambda x: x[1], reverse=True)
-    # print(ranked)
     return [chunk_map[key] for key, _ in ranked[:k]]
