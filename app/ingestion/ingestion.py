@@ -27,7 +27,7 @@ def ingest_pdf(file_path):
     for doc in docs:
         doc.metadata.update(
             {
-                "source": file_path,
+                "source": str(file_path),
                 "document_extension": "pdf",
                 "page": doc.metadata.get("page"),
                 "last_updated": os.path.getmtime(file_path),
@@ -47,13 +47,5 @@ def ingest_pdf(file_path):
     print("Total chunks")
     print(len(chunks))
 
-    # 4 load the embedding model & 5 generate the embeddings
-    # 6. save it in vector db
     vector_store = get_vector_store(collection_name="personalized_retail_banking")
     vector_store.add_documents(chunks)
-
-
-ingest_pdf("data/Capstone_Project_2_Personalized_Retail_Banking_FAQ.pdf")
-
-# to run the script
-# uv run python -m app.ingestion.ingestion
