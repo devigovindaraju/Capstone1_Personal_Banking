@@ -9,8 +9,8 @@ _raw_conn = os.getenv("PG_CONNECTION_STRING_FTS")
 
 
 @tool
-def search_fts(query: str, k: int = 5, collection_name: 
-               str = "personalized_retail_banking"
+def search_fts(
+    query: str, k: int = 5, collection_name: str = "personalized_retail_banking"
 ):
     """Keyword search against the stored chunks using Postgres
     tsvector/tsquery/ts_rank"""
@@ -71,8 +71,9 @@ def search_vector(
 
 
 @tool
-def search_hybrid(    query: str, k: int = 5, collection_name:
-                   str = "personalized_retail_banking"):
+def search_hybrid(
+    query: str, k: int = 5, collection_name: str = "personalized_retail_banking"
+):
     """Merge vector and fts results using RRF (Reciprocal Rank Fusion)
     Chunks appearing in both search results will rank higher than those in only one
     The constant 60 prevents top-ranked outputs from dominating
@@ -83,7 +84,7 @@ def search_hybrid(    query: str, k: int = 5, collection_name:
 
     rrf_scores: dict[str, float] = {}
     chunk_map: dict[str, dict] = {}
-   
+
     for rank, doc in enumerate(vector_search_results):
         # Use the first 120 chars of the chunk text as an identity key.
         # Same chunk retrieved by both searches -> same key -> its scores add up.

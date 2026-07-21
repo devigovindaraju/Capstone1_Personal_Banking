@@ -1,15 +1,16 @@
-# from agents.rag_agent import create_agent
+from app.agents.rag_agent import answer_question
 
 
 def process_query(request: dict):
 
     # Implement--> invoke rag_agent below
-    # result = await create_agent(request)
+    question = request["question"]
+    response = answer_question(question)
 
     return {
-        " question": request["question"],
+        " question": question,
         "message": "Query received successfully.",
-        "request": request,
+        "response": response,
     }
 
 

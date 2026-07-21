@@ -1,12 +1,3 @@
-# Load the pdf file from the data folder
-# extract the content of the file
-# arrive at the chunking strategy
-# load the embedding model
-# embed the chunks
-# connect to postgres and activate pgvector extension
-# save the vector embeddings and original text in db
-
-# uv add python-dotenv
 from dotenv import load_dotenv
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter

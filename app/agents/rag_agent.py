@@ -78,11 +78,10 @@ def answer_question(user_question: str):
         {"messages": [{"role": "user", "content": user_question}]}
     )
 
-    return response
+    return response["messages"][-1].content
 
 
 # user_question = "How should a salaried employee think about their total compensation beyond take-home salary? "
-
 
 # response = answer_question(user_question)
 # if isinstance(response, str):
