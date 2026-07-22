@@ -1,0 +1,246 @@
+/* =========================================================
+   HIDE STREAMLIT DEFAULT UI
+   ========================================================= */
+
+#MainMenu {
+    display: none;
+}
+
+header {
+    display: none;
+}
+
+footer {
+    display: none;
+}
+
+
+/* =========================================================
+   MAIN PAGE
+   ========================================================= */
+
+.block-container {
+    max-width: 1100px !important;
+
+    /*
+    Reserve space at bottom for
+    the fixed chat input form.
+    This allows the page to scroll
+    without the last messages being
+    hidden behind the input area.
+    */
+
+    padding-bottom: 300px !important;
+}
+
+
+/* =========================================================
+   PERSONAL BANKING ASSISTANT HEADER
+   ========================================================= */
+
+.chat-header {
+    position: fixed !important;
+
+    top: 15px !important;
+
+    left: 300px !important;
+
+    z-index: 1000 !important;
+
+    font-size: 16px !important;
+
+    font-weight: 600 !important;
+
+    color: #333 !important;
+
+    z-index: 999999 !important;
+    background: white !important;
+    padding: 5px 10px !important;
+}
+
+
+/* =========================================================
+   USER CHAT MESSAGE
+   ========================================================= */
+
+/* User message */
+
+.user-message {
+    background: #F1F1F1 !important;
+    color: #222 !important;
+    padding: 12px 18px !important;
+    border-radius: 15px !important;
+    margin: 10px 0 !important;
+    width: fit-content !important;
+    max-width: 80% !important;
+    margin-left: auto !important;
+}
+
+
+/* Assistant message */
+
+.bot-message {
+    background: #F1F1F1 !important;
+    color: #222 !important;
+    padding: 12px 18px !important;
+    border-radius: 15px !important;
+    margin: 10px 0 !important;
+    width: fit-content !important;
+    max-width: 80% !important;
+}
+
+/* =========================================================
+   REQUEST DISPLAY INSIDE CHAT HISTORY
+   ========================================================= */
+
+.request-content {
+    margin-top: 10px;
+}
+
+
+.request-content pre {
+    background: #f5f5f5;
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+
+    overflow-wrap: break-word;
+}
+
+
+/* =========================================================
+   FIXED CHAT FORM
+   ========================================================= */
+
+div[data-testid="stForm"] {
+
+    position: fixed !important;
+
+    bottom: 15px !important;
+
+    left: 300px !important;
+
+    right: 30px !important;
+
+    z-index: 999999 !important;
+
+    background: white !important;
+
+    padding: 12px 15px !important;
+
+    border: 1px solid #ddd !important;
+
+    border-radius: 12px !important;
+
+    box-sizing: border-box !important;
+
+    margin: 0 !important;
+}
+
+
+/* =========================================================
+   JSON REQUEST BOX
+   ========================================================= */
+
+div[data-testid="stForm"] textarea {
+
+    width: 100% !important;
+
+    box-sizing: border-box !important;
+
+    font-size: 15px !important;
+}
+
+
+/* =========================================================
+   MESSAGE BOX
+   ========================================================= */
+
+div[data-testid="stForm"] input[type="text"] {
+
+    width: 100% !important;
+
+    box-sizing: border-box !important;
+
+    font-size: 15px !important;
+}
+
+
+/* =========================================================
+   SEND BUTTON
+   ========================================================= */
+
+div[data-testid="stFormSubmitButton"] {
+
+    width: auto !important;
+
+}
+
+
+div[data-testid="stFormSubmitButton"] button {
+
+    min-width: 90px !important;
+
+    width: auto !important;
+
+    height: 42px !important;
+
+    padding: 8px 18px !important;
+
+    border-radius: 20px !important;
+
+    white-space: nowrap !important;
+
+    font-size: 14px !important;
+}
+
+
+/* =========================================================
+   KEEP LAST CHAT MESSAGES ABOVE FIXED FORM
+   ========================================================= */
+
+section.main>div.block-container {
+
+    padding-bottom: 300px !important;
+
+}
+
+
+/* =========================================================
+   MOBILE / SMALL SCREEN
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .chat-header {
+
+        left: 20px !important;
+
+        font-size: 15px !important;
+
+    }
+
+
+    div[data-testid="stForm"] {
+
+        left: 15px !important;
+
+        right: 15px !important;
+
+        bottom: 10px !important;
+
+    }
+
+
+    .block-container {
+
+        padding-bottom: 300px !important;
+
+    }
+
+}

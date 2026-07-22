@@ -1,10 +1,20 @@
 import streamlit as st
-import json
+import os
+
+from utils.chat_history import (
+    initialize_chat,
+    add_user_message,
+    add_bot_message,
+    get_history,
+    clear_history
+)
+
+from utils.validators import validate_json
 
 
-# -------------------------------
-# Page Config
-# -------------------------------
+# =========================================================
+# PAGE CONFIG
+# =========================================================
 
 st.set_page_config(
     page_title="Personal Banking AI",
@@ -13,326 +23,257 @@ st.set_page_config(
 )
 
 
-# -------------------------------
-# CSS
-# -------------------------------
+# =========================================================
+# LOAD CSS
+# =========================================================
+
+BASE_DIR = os.path.dirname(
+    os.path.abspath(__file__)
+)
+
+CSS_FILE = os.path.join(
+    BASE_DIR,
+    "static",
+    "styles.css"
+)
+
+with open(
+    CSS_FILE,
+    "r",
+    encoding="utf-8"
+) as f:
+
+    css = f.read()
+
 
 st.markdown(
-"""
-<style>
-
-#MainMenu {
-    display:none;
-}
-
-header {
-    display:none;
-}
-
-footer {
-    display:none;
-}
-
-
-.block-container {
-
-    max-width:1100px;
-
-    padding-bottom:200px;
-
-}
-
-
-/* User message */
-
-.user-message {
-
-    background:#DCF8C6;
-
-    padding:12px 18px;
-
-    border-radius:15px;
-
-    margin:10px 0;
-
-    width:fit-content;
-
-    max-width:80%;
-
-    margin-left:auto;
-
-}
-
-
-/* Assistant message */
-
-.bot-message {
-
-    background:#F1F1F1;
-
-    padding:12px 18px;
-
-    border-radius:15px;
-
-    margin:10px 0;
-
-    width:fit-content;
-
-    max-width:80%;
-
-}
-
-
-/* Wider textbox */
-
-.stTextArea textarea {
-
-    font-size:16px;
-
-}
-
-</style>
-""",
-unsafe_allow_html=True
+    f"<style>{css}</style>",
+    unsafe_allow_html=True
 )
 
 
+# =========================================================
+# INITIALIZE CHAT
+# =========================================================
 
-# -------------------------------
-# Session Memory
-# -------------------------------
+initialize_chat()
 
-if "chat_history" not in st.session_state:
-
-    st.session_state.chat_history = []
+if "clear_json" not in st.session_state:
+    st.session_state.clear_json = False
 
 
-
-# -------------------------------
-# Sidebar
-# -------------------------------
+# =========================================================
+# SIDEBAR
+# =========================================================
 
 with st.sidebar:
 
-
     st.title("🤖 Banking AI")
 
+    st.divider()
 
-    # if st.button("📂 Upload File"):
+    if st.button(
+        "🗑 Clear Chat",
+        use_container_width=True
+    ):
 
-    #     st.switch_page(
-    #         "pages/Upload_File.py"
-    #     )
-
-
-    # st.divider()
-
-
-    if st.button("🗑 Clear Chat"):
-
-        st.session_state.chat_history = []
+        clear_history()
 
         st.rerun()
 
 
+# =========================================================
+# HEADER
+# =========================================================
 
-# -------------------------------
-# Header
-# -------------------------------
-
-st.title(
-    "Personal Banking Assistant"
+st.markdown(
+    """
+    <div class="chat-header">
+        Personal Banking Assistant
+    </div>
+    """,
+    unsafe_allow_html=True
 )
 
 
-st.caption(
-    "Ask questions related to banking services"
-)
+# =========================================================
+# CHAT HISTORY
+# =========================================================
 
-
-
-# -------------------------------
-# Display History
-# -------------------------------
-
-for chat in st.session_state.chat_history:
-
+for chat in get_history():
 
     if chat["role"] == "user":
 
-
-        request_text = ""
+        st.markdown(
+            f"""
+            <div class="user-message">
+                👤 {chat["message"]}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 
         if chat.get("request"):
 
+            st.markdown(
+                f"""
+                <div class="user-message">
 
-            request_text = f"""
+                📄 Request:
 
-📄 Request:
+                <pre>{chat["request"]}</pre>
 
-<pre>{chat["request"]}</pre>
-
-"""
-
-
-        st.markdown(
-
-            f"""
-<div class="user-message">
-
-👤 {chat["message"]}
-
-{request_text}
-
-</div>
-""",
-
-            unsafe_allow_html=True
-
-        )
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
 
     else:
 
-
         st.markdown(
-
             f"""
-<div class="bot-message">
-
-🤖 {chat["message"]}
-
-</div>
-""",
-
+            <div class="bot-message">
+                🤖 {chat["message"]}
+            </div>
+            """,
             unsafe_allow_html=True
-
         )
 
+# =========================================================
+# JSON REQUEST BOX
+# =========================================================
 
+if st.session_state.clear_json:
 
-# -------------------------------
-# Input Area
-# -------------------------------
+    st.session_state.json_request_box = ""
+
+    st.session_state.clear_json = False
 
 
 json_request = st.text_area(
-
     "JSON Request (Optional)",
-
     placeholder='Example: {"customer_id":"12345"}',
+    height=80,
+    key="json_request_box"
+)
 
-    height=90
+# =========================================================
+# NATIVE STREAMLIT CHAT INPUT
+# =========================================================
 
+prompt = st.chat_input(
+    "Ask something..."
 )
 
 
+# =========================================================
+# SUBMIT LOGIC
+# =========================================================
 
-with st.form(
+if prompt is not None:
 
-    "chat_form",
+    prompt = prompt.strip()
 
-    clear_on_submit=True
-
-):
-
-
-    prompt = st.text_input(
-
-        "Message",
-
-        placeholder="Ask something..."
-
-    )
+    json_request = json_request.strip()
 
 
-    submit = st.form_submit_button(
+    # =====================================================
+    # VALIDATE EMPTY PROMPT
+    # =====================================================
 
-        "➤ Send"
-
-    )
-
-
-
-# -------------------------------
-# Submit
-# -------------------------------
-
-if submit:
-
-
-    if json_request and not prompt:
-
+    if not prompt:
 
         st.warning(
-            "Please send a query along with the JSON request."
+            "Please enter a query."
         )
 
+        st.stop()
+
+
+    # =====================================================
+    # VALIDATE JSON
+    # =====================================================
+
+    request_payload = None
+
+
+    if json_request:
+
+        request_payload = validate_json(
+            json_request
+        )
+
+
+        if request_payload is None:
+
+            st.error(
+                "Invalid JSON format. Please correct your JSON request."
+            )
+
+            st.stop()
+            
+
+        if request_payload == {}:
+
+            st.error(
+                "JSON Request cannot be empty."
+            )    
+
+            st.stop()
+
+
+    # =====================================================
+    # SAVE USER MESSAGE
+    # =====================================================
+
+    add_user_message(
+        message=prompt,
+        request=request_payload
+    )
+
+
+    # =====================================================
+    # BACKEND RESPONSE
+    # =====================================================
+
+    if request_payload is not None:
+
+        response = (
+            f"Received query:\n\n"
+            f"{prompt}\n\n"
+            f"Request:\n\n"
+            f"{request_payload}"
+        )
 
     else:
 
-
-        request_payload = None
-
-
-        if json_request:
-
-
-            try:
-
-                request_payload = json.loads(
-                    json_request
-                )
-
-
-            except json.JSONDecodeError:
-
-
-                st.error(
-                    "Invalid JSON format."
-                )
-
-                st.stop()
-
-
-
-        # Save user message
-
-        st.session_state.chat_history.append(
-
-            {
-                "role":"user",
-                "message":prompt,
-                "request":request_payload
-            }
-
+        response = (
+            f"Received query:\n\n"
+            f"{prompt}"
         )
 
 
-        # Replace with your API response
+    # =====================================================
+    # SAVE ASSISTANT MESSAGE
+    # =====================================================
 
-        response = f"""
-Received query:
-
-{prompt}
-
-Request:
-
-{request_payload}
-"""
+    add_bot_message(
+        response
+    )
 
 
-        # Save assistant response
+    # =====================================================
+    # CLEAR JSON BOX
+    # =====================================================
 
-        st.session_state.chat_history.append(
-
-            {
-                "role":"assistant",
-                "message":response
-            }
-
-        )
+    st.session_state.clear_json = True
 
 
-        st.rerun()
+
+    # =====================================================
+    # REFRESH
+    # =====================================================
+
+    st.rerun()
