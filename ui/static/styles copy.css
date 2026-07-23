@@ -53,7 +53,7 @@ footer {
     font-size: 19px !important;
     font-weight: 600 !important;
 
-    color: #0B2A4A !important;
+    color: #06233D !important;
 
     background: transparent !important;
 
@@ -139,11 +139,12 @@ footer {
 /* =========================================================
    FIXED CHAT FORM
    ========================================================= */
+
 div[data-testid="stForm"] {
 
     position: fixed !important;
 
-    bottom: 85px !important;
+    bottom: 15px !important;
 
     left: 300px !important;
 
@@ -163,6 +164,7 @@ div[data-testid="stForm"] {
 
     margin: 0 !important;
 }
+
 
 /* =========================================================
    JSON REQUEST BOX
@@ -301,7 +303,7 @@ section.main>div.block-container {
 /* Chat input container */
 [data-testid="stChatInput"]>div {
     border: 1px solid #D9E2EC !important;
-    border-radius: 25px !important;
+    border-radius: 12px !important;
     box-shadow: none !important;
 }
 
@@ -430,6 +432,6 @@ section.main>div.block-container {
 }
 
 /* Round prompt box corners */
-/* .stChatInput>div {
+.stChatInput>div {
     border-radius: 25px !important;
-} */
+}

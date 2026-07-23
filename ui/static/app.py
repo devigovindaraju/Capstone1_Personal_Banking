@@ -68,6 +68,9 @@ if "clear_json" not in st.session_state:
 
 with st.sidebar:
 
+    st.title("Banking AI")
+
+    st.divider()
 
     if st.button(
         "Clear Chat",
@@ -117,6 +120,7 @@ for chat in get_history():
                 f"""
                 <div class="user-message">
 
+                Request:
 
                 <pre>{chat["request"]}</pre>
 
@@ -149,11 +153,12 @@ if st.session_state.clear_json:
 
 
 json_request = st.text_area(
-    "",
-    placeholder='Json Request: {"customer_id":"12345"}',
+    "JSON Request (Optional)",
+    placeholder='Example: {"customer_id":"12345"}',
     height=80,
     key="json_request_box"
 )
+
 # =========================================================
 # NATIVE STREAMLIT CHAT INPUT
 # =========================================================
@@ -236,15 +241,17 @@ if prompt is not None:
     if request_payload is not None:
 
         response = (
+            f"Received query:\n\n"
             f"{prompt}\n\n"
-           
+            f"Request:\n\n"
             f"{request_payload}"
         )
 
     else:
 
         response = (
-          prompt
+            f"Received query:\n\n"
+            f"{prompt}"
         )
 
 

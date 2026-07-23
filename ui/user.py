@@ -34,7 +34,7 @@ BASE_DIR = os.path.dirname(
 CSS_FILE = os.path.join(
     BASE_DIR,
     "static",
-    "styles.css"
+    "styles1.css"
 )
 
 with open(
@@ -66,17 +66,20 @@ if "clear_json" not in st.session_state:
 # SIDEBAR
 # =========================================================
 
-with st.sidebar:
+# with st.sidebar:
 
+#     st.title("🤖 Banking AI")
 
-    if st.button(
-        "Clear Chat",
-        use_container_width=True
-    ):
+#     st.divider()
 
-        clear_history()
+#     if st.button(
+#         "🗑 Clear Chat",
+#         use_container_width=True
+#     ):
 
-        st.rerun()
+#         clear_history()
+
+#         st.rerun()
 
 
 # =========================================================
@@ -104,7 +107,7 @@ for chat in get_history():
         st.markdown(
             f"""
             <div class="user-message">
-                {chat["message"]}
+                 {chat["message"]}
             </div>
             """,
             unsafe_allow_html=True
@@ -117,6 +120,7 @@ for chat in get_history():
                 f"""
                 <div class="user-message">
 
+                Request:
 
                 <pre>{chat["request"]}</pre>
 
@@ -131,7 +135,7 @@ for chat in get_history():
         st.markdown(
             f"""
             <div class="bot-message">
-                {chat["message"]}
+                 {chat["message"]}
             </div>
             """,
             unsafe_allow_html=True
@@ -141,19 +145,20 @@ for chat in get_history():
 # JSON REQUEST BOX
 # =========================================================
 
-if st.session_state.clear_json:
+# if st.session_state.clear_json:
 
-    st.session_state.json_request_box = ""
+#     st.session_state.json_request_box = ""
 
-    st.session_state.clear_json = False
+#     st.session_state.clear_json = False
 
 
-json_request = st.text_area(
-    "",
-    placeholder='Json Request: {"customer_id":"12345"}',
-    height=80,
-    key="json_request_box"
-)
+# json_request = st.text_area(
+#     "JSON Request (Optional)",
+#     placeholder='Example: {"customer_id":"12345"}',
+#     height=80,
+#     key="json_request_box"
+# )
+
 # =========================================================
 # NATIVE STREAMLIT CHAT INPUT
 # =========================================================
@@ -171,7 +176,7 @@ if prompt is not None:
 
     prompt = prompt.strip()
 
-    json_request = json_request.strip()
+    # json_request = json_request.strip()
 
 
     # =====================================================
@@ -191,32 +196,32 @@ if prompt is not None:
     # VALIDATE JSON
     # =====================================================
 
-    request_payload = None
+    # request_payload = None
 
 
-    if json_request:
+    # if json_request:
 
-        request_payload = validate_json(
-            json_request
-        )
+    #     request_payload = validate_json(
+    #         json_request
+    #     )
 
 
-        if request_payload is None:
+    #     if request_payload is None:
 
-            st.error(
-                "Invalid JSON format. Please correct your JSON request."
-            )
+    #         st.error(
+    #             "Invalid JSON format. Please correct your JSON request."
+    #         )
 
-            st.stop()
+    #         st.stop()
             
 
-        if request_payload == {}:
+    #     if request_payload == {}:
 
-            st.error(
-                "JSON Request cannot be empty."
-            )    
+    #         st.error(
+    #             "JSON Request cannot be empty."
+    #         )    
 
-            st.stop()
+    #         st.stop()
 
 
     # =====================================================
@@ -224,8 +229,8 @@ if prompt is not None:
     # =====================================================
 
     add_user_message(
-        message=prompt,
-        request=request_payload
+        message=prompt
+       # request=request_payload
     )
 
 
@@ -233,18 +238,19 @@ if prompt is not None:
     # BACKEND RESPONSE
     # =====================================================
 
-    if request_payload is not None:
+    # if request_payload is not None:
 
-        response = (
-            f"{prompt}\n\n"
-           
-            f"{request_payload}"
-        )
+    #     response = (
+    #         f"Received query:\n\n"
+    #         f"{prompt}\n\n"
+    #         f"Request:\n\n"
+    #         f"{request_payload}"
+    #     )
 
-    else:
+    # else:
 
-        response = (
-          prompt
+    response = (
+           prompt
         )
 
 

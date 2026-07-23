@@ -16,6 +16,14 @@ footer {
 
 
 /* =========================================================
+   MAIN PAGE BACKGROUND
+   ========================================================= */
+
+.stApp {
+    background-color: #DCEAF5 !important;
+}
+
+/* =========================================================
    MAIN PAGE
    ========================================================= */
 
@@ -30,22 +38,18 @@ footer {
     hidden behind the input area.
     */
 
-    padding-bottom: 150px !important;
+    padding-bottom: 300px !important;
 }
 
 
 /* =========================================================
    PERSONAL BANKING ASSISTANT HEADER
    ========================================================= */
-
 .chat-header {
-
-
-
     position: fixed !important;
 
     top: 18px !important;
-
+    left: 30px !important;
 
     z-index: 999999 !important;
 
@@ -64,21 +68,24 @@ footer {
     box-shadow: none !important;
 
     letter-spacing: 0.3px !important;
-
-    left: 300px !important;
-
-
 }
-
 
 /* =========================================================
    USER CHAT MESSAGE
    ========================================================= */
 
+/* User message */
+/* =========================================================
+   USER CHAT MESSAGE
+   ========================================================= */
+
+/* =========================================================
+   USER CHAT MESSAGE
+   ========================================================= */
 .user-message {
     font-family: "Poppins", "Segoe UI", sans-serif !important;
 
-    font-weight: 480 !important;
+    font-weight: 500 !important;
     line-height: 1.6 !important;
 
     background: #F1F1F1 !important;
@@ -97,7 +104,7 @@ footer {
 .bot-message {
     font-family: "Poppins", "Segoe UI", sans-serif !important;
 
-    font-weight: 480 !important;
+    font-weight: 500 !important;
     line-height: 1.6 !important;
 
     background: #F1F1F1 !important;
@@ -111,7 +118,6 @@ footer {
     max-width: 80% !important;
 }
 
-/* User message */
 /* =========================================================
    REQUEST DISPLAY INSIDE CHAT HISTORY
    ========================================================= */
@@ -139,11 +145,12 @@ footer {
 /* =========================================================
    FIXED CHAT FORM
    ========================================================= */
+
 div[data-testid="stForm"] {
 
     position: fixed !important;
 
-    bottom: 85px !important;
+    bottom: 15px !important;
 
     left: 300px !important;
 
@@ -164,38 +171,18 @@ div[data-testid="stForm"] {
     margin: 0 !important;
 }
 
+
 /* =========================================================
    JSON REQUEST BOX
    ========================================================= */
 
 div[data-testid="stForm"] textarea {
+
     width: 100% !important;
+
     box-sizing: border-box !important;
 
-    height: 50px !important;
-    min-height: 50px !important;
-
-    font-family: "Poppins", "Segoe UI", sans-serif !important;
-    font-size: 13px !important;
-
-    background-color: #F1F1F1 !important;
-    color: #333 !important;
-
-    border: 1px solid #D9E2EC !important;
-    border-radius: 10px !important;
-
-    padding: 8px 12px !important;
-
-}
-
-
-/* JSON Request label */
-
-div[data-testid="stForm"] label {
-    font-family: "Poppins", "Segoe UI", sans-serif !important;
-    font-size: 13px !important;
-    font-weight: 400 !important;
-    color: #4A5568 !important;
+    font-size: 15px !important;
 }
 
 
@@ -248,7 +235,7 @@ div[data-testid="stFormSubmitButton"] button {
 
 section.main>div.block-container {
 
-    padding-bottom: 150px !important;
+    padding-bottom: 300px !important;
 
 }
 
@@ -287,6 +274,37 @@ section.main>div.block-container {
 
 }
 
+/* Hide Streamlit sidebar completely */
+[data-testid="stSidebar"] {
+    display: none;
+}
+
+/* Remove sidebar collapse button */
+[data-testid="collapsedControl"] {
+    display: none;
+}
+
+/* Expand main content after removing sidebar */
+.main .block-container {
+    max-width: 100%;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+
+[data-testid="stAppViewContainer"] {
+    background-color: #DCEAF5 !important;
+}
+
+[data-testid="stHeader"] {
+    background-color: #DCEAF5 !important;
+}
+
+
+/* =========================================================
+   CHAT INPUT SEND BUTTON
+   ========================================================= */
+
 /* =========================================================
    CHAT INPUT
    ========================================================= */
@@ -301,7 +319,7 @@ section.main>div.block-container {
 /* Chat input container */
 [data-testid="stChatInput"]>div {
     border: 1px solid #D9E2EC !important;
-    border-radius: 25px !important;
+    border-radius: 12px !important;
     box-shadow: none !important;
 }
 
@@ -355,81 +373,3 @@ section.main>div.block-container {
     fill: #FFFFFF !important;
     stroke: #FFFFFF !important;
 }
-
-[data-testid="stAppViewContainer"] {
-    background-color: #DCEAF5 !important;
-}
-
-[data-testid="stHeader"] {
-    background-color: #DCEAF5 !important;
-}
-
-
-[data-testid="stSidebar"] {
-    background-color: #F4F7FA !important;
-}
-
-[data-testid="stSidebar"] h1 {
-    color: #0B2A4A !important;
-    font-size: 24px !important;
-    font-weight: 600 !important;
-}
-
-/* =========================================================
-   SIDEBAR NAVIGATION
-   ========================================================= */
-
-/* Navigation text */
-[data-testid="stSidebarNav"] span {
-    font-family: "Poppins", "Segoe UI", sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    color: #0B2A4A !important;
-}
-
-/* Navigation items spacing */
-[data-testid="stSidebarNav"] li {
-    margin-bottom: 5px !important;
-}
-
-/* Navigation links */
-[data-testid="stSidebarNav"] a {
-    border-radius: 8px !important;
-    padding: 8px 10px !important;
-}
-
-/* Hover effect */
-[data-testid="stSidebarNav"] a:hover {
-    background-color: #DCEAF5 !important;
-}
-
-/* Selected/current page */
-[data-testid="stSidebarNav"] a[aria-current="page"] {
-    background-color: #D6E2EE !important;
-    color: #0B2A4A !important;
-}
-
-/* =========================================================
-   UPLOAD PAGE TITLE
-   ========================================================= */
-
-.upload-title {
-    font-family: "Poppins", "Segoe UI", sans-serif !important;
-    font-size: 20px !important;
-    font-weight: 600 !important;
-    color: #0B2A4A !important;
-    letter-spacing: 0.2px !important;
-}
-
-.upload-subtitle {
-    margin-top: 6px !important;
-    font-family: "Poppins", "Segoe UI", sans-serif !important;
-    font-size: 13px !important;
-    font-weight: 400 !important;
-    color: #5B6B7A !important;
-}
-
-/* Round prompt box corners */
-/* .stChatInput>div {
-    border-radius: 25px !important;
-} */
