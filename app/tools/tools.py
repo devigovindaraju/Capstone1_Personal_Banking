@@ -56,6 +56,7 @@ def search_vector(
     """
     this function is used to find the similar text using the similarity_Search method
     """
+
     vector_store = get_vector_store(collection_name)
     docs = vector_store.similarity_search(query, k)
 
@@ -79,6 +80,7 @@ def search_hybrid(
     The constant 60 prevents top-ranked outputs from dominating
     How RRF scores for a chunk = sum of 1/(rank + 60)
     """
+
     vector_search_results = search_vector.func(query, 5, collection_name)
     fts_results = search_fts.func(query, 5, collection_name)
 
@@ -99,4 +101,5 @@ def search_hybrid(
 
     # sort the results and higher scoring chunk appear at top of the final list
     ranked = sorted(rrf_scores.items(), key=lambda x: x[1], reverse=True)
+
     return [chunk_map[key] for key, _ in ranked[:k]]
