@@ -13,10 +13,14 @@ def get_embeddings():
 
 
 def get_vector_store(collection_name: str, pre_delete_collection: bool = False):
-    return PGVector(
-        collection_name=collection_name,
-        connection=PG_CONNECTION,
-        embeddings=get_embeddings(),
-        use_jsonb=True,  # for better querying during retrieval
-        pre_delete_collection=pre_delete_collection,
-    )
+    try:
+        return PGVector(
+            collection_name=collection_name,
+            connection=PG_CONNECTION,
+            embeddings=get_embeddings(),
+            use_jsonb=True,  # for better querying during retrieval
+            pre_delete_collection=pre_delete_collection,
+        )
+    except Exception as e:
+        print(f"error while connectinmg to pg vector db : {e}")
+        raise RuntimeError("failed to connect to db") from e
