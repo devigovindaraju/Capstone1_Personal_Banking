@@ -90,43 +90,57 @@ financial_advisor_agent = create_agent(
 )
 
 
-def answer_question(user_question: str):
+def answer_question(user_question: str,customer_profile: dict):
     try:
-        response = financial_advisor_agent.invoke(
-            {"messages": [{"role": "user", "content": user_question}]}
-        )
+       response = financial_advisor_agent.invoke(
+    {
+        "messages": [
+            {
+                "role": "user",
+                "content": user_question
+            }
+        ]
+      
+    }
+)
 
-        return response["messages"][-1].content
+       response= response["messages"][-1].content 
+       response = json.loads(response)
+       response.pop("query", None)
+       response["customer_profile"] = customer_profile
+
+
+       return response
 
     except Exception as e:
         print("Agent invocation failed")
         raise RuntimeError("Unable to process your request.") from e
 
 
-user_question = """
-{
-  "question": "is this profile eligible to get home loan?",
-  "customer_profile": {
-    "customer_id": "CUST001",
-    "age": 40,
-    "income": 1200000,
-    "employment": "Salaried",
-    "risk_appetite": "Moderate",
-    "goals": [
-      {
-        "goal": "Car Purchase",
-        "target_amount": 1000000,
-        "years": 2
-      }
-    "monthly_expenses": 50000,
-    "credit_score": 750
+# user_question = """
+# {
+#   "question": "is this profile eligible to get home loan?",
+#   "customer_profile": {
+#     "customer_id": "CUST001",
+#     "age": 40,
+#     "income": 1200000,
+#     "employment": "Salaried",
+#     "risk_appetite": "Moderate",
+#     "goals": [
+#       {
+#         "goal": "Car Purchase",
+#         "target_amount": 1000000,
+#         "years": 2
+#       }
+#     "monthly_expenses": 50000,
+#     "credit_score": 750
 
-    ]
-  }
-}
-"""
+#     ]
+#   }
+# }
+# """
 #user_question="tell me best place to visit in bangalore "
 
-response = json.loads(answer_question(user_question))
-print(response["answer"])
+
+
 
