@@ -127,6 +127,19 @@ user_question = """
 """
 #user_question="tell me best place to visit in bangalore "
 
-response = json.loads(answer_question(user_question))
-print(response["answer"])
+# response = json.loads(answer_question(user_question))
+# print(response["answer"])
+
+# The agent invocation is kept under the main guard to prevent it from
+# executing automatically when this module is imported by FastAPI.
+# This allows FastAPI to start normally and ensures the agent is invoked
+# only through the intended API request flow during integration.
+if __name__ == "__main__":
+    user_question = "some question"
+
+    response = json.loads(
+        answer_question(user_question)
+    )
+
+    print(response)
 
