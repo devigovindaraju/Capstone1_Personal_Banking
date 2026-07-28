@@ -4,7 +4,7 @@ import os
 import json
 from app.tools.tools import search_fts, search_vector, search_hybrid
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 
 
 class CustomerProfile(BaseModel):
@@ -13,7 +13,11 @@ class CustomerProfile(BaseModel):
     age: int = Field(description = "age of the customer")
     income: int = Field (description="customer income")
     employment: str = Field(description= "customer employment is self employeed or salaried" )
-    salary: int = Field(description ="customer salary info")
+    #salary: int = Field(description ="customer salary info")
+    salary: Optional[int] = Field(
+    default=None,
+    description="customer salary info"
+)
 
 
 
@@ -21,7 +25,11 @@ class AgentResponse(BaseModel):
     """Structured response from AI"""
 
     query: str = Field(description="The specific topic")
-    customer_profile: List[CustomerProfile] = Field(description="customer details")
+    customer_profile: Optional[List[CustomerProfile]] = Field(
+    default=None,
+    description="customer details if provided or relevant"
+)
+    #customer_profile: List[CustomerProfile] = Field(description="customer details")
     answer: str = Field(description="answer to the customer question using customer profile")
 
 
@@ -85,62 +93,38 @@ financial_advisor_agent = create_agent(
         - generic recommendations
         - filler phrases
         - sentences that do not directly answer the user's question
-
+        -In response include 
+          Citation:
+          Title:
+          Page:
+          Source:
         """,
 )
 
 
-def answer_question(user_question: str,customer_profile: dict):
+def answer_question(
+    user_question: str,
+    customer_profile: dict = None
+):
     try:
-       response = financial_advisor_agent.invoke(
-    {
-        "messages": [
-            {
-                "role": "user",
-                "content": user_question
-            }
-        ]
-      
-    }
-)
+        user_message = {
+          "question": user_question,
+          "customer_profile": customer_profile
+      }
 
-       response= response["messages"][-1].content 
-       response = json.loads(response)
-       response.pop("query", None)
-       response["customer_profile"] = customer_profile
-
-
-       return response
+        response = financial_advisor_agent.invoke(
+          {
+              "messages": [
+                  {
+                      "role": "user",
+                      "content": json.dumps(user_message)
+                  }
+              ]
+          }
+      )        
+        return response["messages"][-1].content
 
     except Exception as e:
         print("Agent invocation failed")
         raise RuntimeError("Unable to process your request.") from e
-
-
-# user_question = """
-# {
-#   "question": "is this profile eligible to get home loan?",
-#   "customer_profile": {
-#     "customer_id": "CUST001",
-#     "age": 40,
-#     "income": 1200000,
-#     "employment": "Salaried",
-#     "risk_appetite": "Moderate",
-#     "goals": [
-#       {
-#         "goal": "Car Purchase",
-#         "target_amount": 1000000,
-#         "years": 2
-#       }
-#     "monthly_expenses": 50000,
-#     "credit_score": 750
-
-#     ]
-#   }
-# }
-# """
-#user_question="tell me best place to visit in bangalore "
-
-
-
 
