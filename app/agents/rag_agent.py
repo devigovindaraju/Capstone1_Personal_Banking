@@ -121,9 +121,7 @@ def answer_question(
                   }
               ]
           }
-      )
-
-        
+      )        
         return response["messages"][-1].content
 
     except Exception as e:

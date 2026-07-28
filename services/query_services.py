@@ -15,7 +15,7 @@ def process_query(request: dict):
     )
     
     return {
-        " question": question,
+        "question": question,
         "message": "Query received successfully.",
         "response": response,
     }

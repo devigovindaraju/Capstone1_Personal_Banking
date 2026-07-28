@@ -144,9 +144,7 @@ for chat in get_history():
             """,
             unsafe_allow_html=True
         )
-
-
-
+        
 if st.session_state.pending_request is not None:
 
     pending = st.session_state.pending_request
