@@ -2,41 +2,20 @@ import streamlit as st
 import requests
 import os
 
-st.set_page_config(
-
-    page_title="Upload Files",
-
-    page_icon="📂"
-
-)
+st.set_page_config(page_title="Upload Files", page_icon="📂")
 
 if "current_uploaded_file" not in st.session_state:
     st.session_state.current_uploaded_file = None
 
-BASE_DIR = os.path.dirname(
-    os.path.dirname(
-        os.path.abspath(__file__)
-    )
-)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-CSS_FILE = os.path.join(
-    BASE_DIR,
-    "static",
-    "styles.css"
-)
+CSS_FILE = os.path.join(BASE_DIR, "static", "styles.css")
 
-with open(
-    CSS_FILE,
-    "r",
-    encoding="utf-8"
-) as f:
+with open(CSS_FILE, "r", encoding="utf-8") as f:
 
     css = f.read()
 
-st.markdown(
-    f"<style>{css}</style>",
-    unsafe_allow_html=True
-)
+st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 
 st.markdown(
@@ -49,21 +28,11 @@ st.markdown(
         Upload documents to enhance the Personal Banking AI knowledge base
     </div>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 uploaded_file = st.file_uploader(
-
-    "Upload Document",
-
-    type=[
-        "pdf",
-        "csv",
-        "xlsx",
-        "txt",
-        "json"
-    ]
-
+    "Upload Document", type=["pdf", "csv", "xlsx", "txt", "json"]
 )
 
 if uploaded_file:
@@ -71,18 +40,13 @@ if uploaded_file:
     if st.button("upload"):
 
         files = {
-            "file": (
-                uploaded_file.name,
-                uploaded_file.getvalue(),
-                uploaded_file.type
-            )
+            "file": (uploaded_file.name, uploaded_file.getvalue(), uploaded_file.type)
         }
 
         try:
 
             response = requests.post(
-                "http://localhost:9000/api/v1/documents/",
-                files=files
+                "http://localhost:9000/api/v1/documents/", files=files
             )
 
             response.raise_for_status()
@@ -94,12 +58,4 @@ if uploaded_file:
             st.write(result["message"])
         except requests.exceptions.RequestException as e:
 
-            st.error(
-                f"Upload failed: {e}"
-            )
-
-# if st.session_state.current_uploaded_file:
-#     st.write(
-#         f"Current uploaded document: {st.session_state.current_uploaded_file}"
-#     )            
-
+            st.error(f"Upload failed: {e}")

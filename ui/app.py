@@ -170,8 +170,6 @@ if st.session_state.pending_request is not None:
 
             response = backend_response["answer"]
 
-            print("ANSWER DISPLAYED IN UI:", response)
-
             add_bot_message(
                 response
             )
@@ -215,7 +213,6 @@ json_request = st.text_area(
 prompt = st.chat_input(
     "Ask something..."
 )
-
 
 # =========================================================
 # SUBMIT LOGIC
@@ -281,10 +278,6 @@ if prompt is not None:
         request=request_payload
     )
 
-# =====================================================
-# BACKEND RESPONSE
-# =====================================================
-
    # =====================================================
 # PREPARE BACKEND PAYLOAD
 # =====================================================
@@ -296,8 +289,6 @@ if prompt is not None:
     if request_payload is not None:
         payload["customer_profile"] = request_payload
 
-
-
     # =====================================================
     # STORE PENDING REQUEST
     # =====================================================
@@ -305,8 +296,6 @@ if prompt is not None:
     st.session_state.pending_request = {
         "payload": payload
     }
-
-
     # =====================================================
     # RERUN TO SHOW USER MESSAGE
     # =====================================================

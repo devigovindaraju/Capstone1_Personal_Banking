@@ -311,10 +311,6 @@ section.main>div.block-container {
     box-shadow: none !important;
 }
 
-
-/* =========================================================
-   SEND BUTTON
-   ========================================================= */
 /* =========================================================
    CHAT INPUT SEND BUTTON
    ========================================================= */
@@ -428,8 +424,3 @@ section.main>div.block-container {
     font-weight: 400 !important;
     color: #5B6B7A !important;
 }
-
-/* Round prompt box corners */
-/* .stChatInput>div {
-    border-radius: 25px !important;
-} */

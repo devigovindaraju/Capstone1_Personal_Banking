@@ -106,10 +106,6 @@ def answer_question(
     user_question: str,
     customer_profile: dict = None
 ):
-
-    print("INSIDE ANSWER_QUESTION:")
-    print("Question:", user_question)
-    print("Customer Profile:", customer_profile)
     try:
         user_message = {
           "question": user_question,
