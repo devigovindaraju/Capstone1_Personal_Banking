@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-
+import os
 
 st.set_page_config(
 
@@ -10,7 +10,8 @@ st.set_page_config(
 
 )
 
-import os
+if "current_uploaded_file" not in st.session_state:
+    st.session_state.current_uploaded_file = None
 
 BASE_DIR = os.path.dirname(
     os.path.dirname(
@@ -88,10 +89,17 @@ if uploaded_file:
 
             result = response.json()
 
+            st.session_state.current_uploaded_file = uploaded_file.name
+
             st.write(result["message"])
         except requests.exceptions.RequestException as e:
 
             st.error(
                 f"Upload failed: {e}"
             )
+
+# if st.session_state.current_uploaded_file:
+#     st.write(
+#         f"Current uploaded document: {st.session_state.current_uploaded_file}"
+#     )            
 

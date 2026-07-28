@@ -4,9 +4,23 @@ from app.agents.rag_agent import answer_question
 def process_query(request: dict):
 
     # Implement--> invoke rag_agent below
+    print("FASTAPI RECEIVED REQUEST:", request)
     question = request["question"]
-    response = answer_question(question)
 
+    customer_profile = request.get(
+        "customer_profile"
+    )
+
+
+    print("PASSING TO AGENT:")
+    print("Question:", question)
+    print("Customer Profile:", customer_profile)
+    response = answer_question(
+        question,
+        customer_profile
+    )
+
+    print("RESPONSE FROM AGENT:", response)
     return {
         " question": question,
         "message": "Query received successfully.",

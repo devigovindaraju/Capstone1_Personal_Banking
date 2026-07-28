@@ -154,7 +154,7 @@ if st.session_state.pending_request is not None:
     with st.spinner("Processing your request..."):
 
         try:
-    
+
             api_response = requests.post(
                 "http://localhost:9000/api/v1/advisor/",
                 json=pending["payload"]
@@ -169,8 +169,6 @@ if st.session_state.pending_request is not None:
             )
 
             response = backend_response["answer"]
-
-            print("ANSWER DISPLAYED IN UI:", response)
 
             add_bot_message(
                 response
@@ -271,6 +269,7 @@ if prompt is not None:
             )    
 
             st.stop()
+
 
     # =====================================================
     # SAVE USER MESSAGE
