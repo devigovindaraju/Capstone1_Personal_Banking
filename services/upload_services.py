@@ -16,4 +16,5 @@ async def upload_document(file: UploadFile):
     return {
         "message": "File uploaded successfully",
         "filename": file.filename,
+        
     }

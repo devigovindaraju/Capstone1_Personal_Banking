@@ -98,7 +98,6 @@ def search_hybrid(
         key = item["content"][:120]
         rrf_scores[key] = rrf_scores.get(key, 0) + 1 / (60 + rank + 1)
         chunk_map[key] = {"content": item["content"], "metadata": item["metadata"]}
-
     # sort the results and higher scoring chunk appear at top of the final list
     ranked = sorted(rrf_scores.items(), key=lambda x: x[1], reverse=True)
 
