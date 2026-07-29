@@ -1,9 +1,11 @@
 import streamlit as st
 import requests
+import os
 
 st.set_page_config(page_title="Upload Files", page_icon="📂")
 
-import os
+if "current_uploaded_file" not in st.session_state:
+    st.session_state.current_uploaded_file = None
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -29,19 +31,31 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-uploaded_file = st.file_uploader("", type=["pdf", "csv", "xlsx", "txt", "json"])
-
+uploaded_file = st.file_uploader(
+    "Upload Document", type=["pdf", "csv", "xlsx", "txt", "json"]
+)
 
 if uploaded_file:
 
-    st.success(f"{uploaded_file.name} uploaded successfully")
-    files = {"file": (uploaded_file.name, uploaded_file.getvalue())}
+    if st.button("upload"):
 
-    response = requests.post("http://localhost:8000/api/v1/documents/", files=files)
+        files = {
+            "file": (uploaded_file.name, uploaded_file.getvalue(), uploaded_file.type)
+        }
 
-    if response.status_code == 200:
-        st.success("File uploaded successfully!")
-        st.json(response.json())
-    else:
-        st.error("Upload failed")
-        st.write(response.text)
+        try:
+
+            response = requests.post(
+                "http://localhost:9000/api/v1/documents/", files=files
+            )
+
+            response.raise_for_status()
+
+            result = response.json()
+
+            st.session_state.current_uploaded_file = uploaded_file.name
+
+            st.write(result["message"])
+        except requests.exceptions.RequestException as e:
+
+            st.error(f"Upload failed: {e}")

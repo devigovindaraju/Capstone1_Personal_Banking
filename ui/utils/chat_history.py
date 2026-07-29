@@ -1,4 +1,5 @@
 import streamlit as st
+from pathlib import Path
 
 
 def initialize_chat():
@@ -25,16 +26,14 @@ def add_user_message(
     )
 
 
-
-def add_bot_message(message):
+def add_bot_message(message, citations=None):
 
     st.session_state.chat_history.append(
-
         {
-            "role":"assistant",
-            "message":message
+            "role": "assistant",
+            "message": message,
+            "citations": citations or []
         }
-
     )
 
 

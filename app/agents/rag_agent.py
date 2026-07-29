@@ -25,9 +25,10 @@ class AgentResponse(BaseModel):
     """Structured response from AI"""
 
     query: str = Field(description="The specific topic")
-    customer_profile: List[CustomerProfile] = Field(description="customer details")
+    customer_profile: Optional[List[CustomerProfile]] = Field(default=None,description="customer details if provided or relevant")
     answer: str = Field(description="answer to the customer question using customer profile")
     citations: List[Citation] = Field(description="Returns the citation details")
+    json_input: bool = False
 
 
 financial_advisor_agent = create_agent(
@@ -40,7 +41,9 @@ financial_advisor_agent = create_agent(
         1. Greeting handling:
         - If the user only sends a greeting such as "hi", "hello", 
             "hey", "good morning",",what can i do", or similar:
-        - Respond politely.
+        
+        -Politely refuse to answer if topic is not suitable for
+         banking financial assistant or irrelevant to this agent's scope
               
         Tool usage rules:
         1. You have access to these tools:
@@ -54,7 +57,9 @@ financial_advisor_agent = create_agent(
         - Use search_hybrid when both keyword and semantic matching are useful.
      
         Answer rules:
-        - Answer ONLY using information returned by tools.
+        - Greeting → no tool call → no citations.
+        - Financial question → use retrieval → include citations.
+           Answer ONLY using information returned by tools.           
         - Always use both the retrieved knowledge and the customer profile retrieved from the tools
           to answer the user's question
         - Do not repeat background information from retrieved documents ,
@@ -65,12 +70,7 @@ financial_advisor_agent = create_agent(
         - answer the user question with proper sentence and easy to understand
         - Follow with one short sentence explaining the decision using ONLY the customer's profile attributes.
           Only include supporting profile attributes if user ask why,explanaition,reason
-        - Prefer customer facts such as:
-          - annual income
-          - employment type
-          - credit/CIBIL score
-          - age
-          - existing obligations (only if relevant)
+
         - Do NOT explain the underlying lending guidelines, debt-to-income rules, competitive rates,
           or retrieved policy text unless the user explicitly asks.
         - Limit the explanation to one sentence (maximum 25 words). 
@@ -80,7 +80,7 @@ financial_advisor_agent = create_agent(
         - Do not infer missing information.
         - Do not combine multiple unrelated FAQs.
         - Never ask a follow-up question if a reasonable default interpretation exists.
-        Politely refuse to answeer if the topic is not relevant to Finanical assistance
+        
         6.Before returning your answer, remove:
         - repeated ideas
         - unnecessary qualifiers
@@ -90,81 +90,32 @@ financial_advisor_agent = create_agent(
          """,
 )
 
-user_question="""I am a salaried professional with a moderate risk appetite and some existing equity investments. 
-Which mutual fund categories should I additionally consider for diversification?"""
-
-# def answer_question(user_question: str):    #,customer_profile: dict):
-#     try:
-#        response = financial_advisor_agent.invoke(
-#     {
-#         "messages": [
-#             {
-#                 "role": "user",
-#                 "content": user_question
-#             }
-#         ]
-      
-#     }
-#      )
-#     #    print("********************************************")
-#     #    print(response.keys())
-#     #    response = response["messages"][-1].content 
-#     #    response = json.loads(response)
-#     #    response.pop("query", None)
-#     #    #response["customer_profile"] = customer_profile
-
-#         return response
-
-#     except Exception as e:
-#         print("Agent invocation failed")
-#         raise RuntimeError("Unable to process your request.") from e
-
-
 def answer_question(user_question: str):
+    is_json_input = False
+
+    try:
+        json.loads(user_question)
+        is_json_input = True
+    except:
+        pass
+
     try:
         response = financial_advisor_agent.invoke(
             {"messages": [{"role": "user", "content": user_question}]}
         )
 
-        return response["messages"][-1].content
+        answer: AgentResponse = response["structured_response"]
+        answer.json_input = is_json_input
+
+        return answer.model_dump_json()
 
     except Exception as e:
         print("Agent invocation failed")
         raise RuntimeError("Unable to process your request.") from e
 
 
-# user_question = """
-# {
-#   "question": "is this profile eligible to get home loan?",
-#   "customer_profile": {
-#     "customer_id": "CUST001",
-#     "age": 40,
-#     "income": 1200000,
-#     "employment": "Salaried",
-#     "risk_appetite": "Moderate",
-#     "goals": [
-#       {
-#         "goal": "Car Purchase",
-#         "target_amount": 1000000,
-#         "years": 2
-#       }
-#     "monthly_expenses": 50000,
-#     "credit_score": 750
-
-#     ]
-#   }
-# }
-#"""
 
 
-response : AgentResponse = json.loads(answer_question(user_question))
-print("********************************************")
-print(response["answer"])
-
-for c in response["citations"]:
-    print(
-        f"Source: {Path(c['source']).name} (Page {c['page']+1})"
-    )
 
 
 
