@@ -3,11 +3,10 @@ from fastapi import UploadFile
 
 from app.ingestion.ingestion import ingest_pdf
 
-Data = Path("data")
-Data.mkdir(exist_ok=True)
-
 
 async def upload_document(file: UploadFile):
+    Data = Path("data")
+    Data.mkdir(exist_ok=True)
     file_path = Data / file.filename
 
     with open(file_path, "wb") as buffer:
