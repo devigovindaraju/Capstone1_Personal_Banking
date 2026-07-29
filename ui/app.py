@@ -1,8 +1,8 @@
 import json
-
 import streamlit as st
 import os
 import requests
+from pathlib import Path
 
 
 from utils.chat_history import (
@@ -109,16 +109,33 @@ for chat in get_history():
                 unsafe_allow_html=True,
             )
 
+
+
     else:
 
-        st.markdown(
-            f"""
-            <div class="bot-message">
-                {chat["message"]}
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        if isinstance(chat["message"], dict):
+            st.json(chat["message"])
+        else:
+            citation_html = ""
+            if chat.get("citations"):
+                citation_html += "<hr style='border-top: 1px solid #ccc; margin: 10px 0;'>"
+                citation_html += "<p style='font-size: 0.85em; color: #666;'><strong>🔍 Sources:</strong></p><ul style='margin: 0; padding-left: 20px; font-size: 0.85em; color: #666;'>"
+                for c in chat["citations"]:
+                    file_name = Path(c['source']).name
+                    page_num = c['page'] + 1
+                    citation_html += f"<li>{file_name} (Page {page_num})</li>"
+                citation_html += "</ul>"
+
+            # 2. Render everything together inside your custom div
+            st.markdown(
+                f"""
+                <div class="bot-message">
+                    <p style="margin: 0;">{chat["message"]}</p>
+                    {citation_html}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
 if st.session_state.pending_request is not None:
 
@@ -134,13 +151,22 @@ if st.session_state.pending_request is not None:
 
             result = api_response.json()
 
-            st.write("Backend result:", result)
+            # st.write("Backend result:", result)
 
             backend_response = json.loads(result["response"])
 
             response = backend_response["answer"]
+            citations = backend_response["citations"]       
+         
+            if backend_response["json_input"]:
 
-            add_bot_message(response)
+            # User input is JSON
+                add_bot_message(backend_response, None)
+
+            else:
+            # User input is plain text
+                add_bot_message(response, citations)   
+          
 
         except requests.exceptions.RequestException as e:
 
