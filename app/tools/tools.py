@@ -45,7 +45,7 @@ def search_fts(
         }
         for row in rows
     ]
-
+    print("******chunk retrieved from FTS search ******")
     return output
 
 
@@ -67,7 +67,7 @@ def search_vector(
         }
         for doc in docs
     ]
-
+    print("******chunk retrieved from vector search******")  
     return output
 
 
@@ -100,5 +100,5 @@ def search_hybrid(
         chunk_map[key] = {"content": item["content"], "metadata": item["metadata"]}
     # sort the results and higher scoring chunk appear at top of the final list
     ranked = sorted(rrf_scores.items(), key=lambda x: x[1], reverse=True)
-
+    print("******chunk retrieved from Hybrid search ******")
     return [chunk_map[key] for key, _ in ranked[:k]]
