@@ -119,7 +119,7 @@ for chat in get_history():
             citation_html = ""
             if chat.get("citations"):
                 citation_html += "<hr style='border-top: 1px solid #ccc; margin: 10px 0;'>"
-                citation_html += "<p style='font-size: 0.85em; color: #666;'><strong>🔍 Sources:</strong></p><ul style='margin: 0; padding-left: 20px; font-size: 0.85em; color: #666;'>"
+                citation_html += "<p style='font-size: 0.85em; color: #666;'><strong> Sources:</strong></p><ul style='margin: 0; padding-left: 20px; font-size: 0.85em; color: #666;'>"
                 for c in chat["citations"]:
                     file_name = Path(c['source']).name
                     page_num = c['page'] + 1
@@ -153,7 +153,7 @@ if st.session_state.pending_request is not None:
 
             # st.write("Backend result:", result)
 
-            backend_response = json.loads(result["response"])
+            backend_response = result["response"] #json.loads(result["response"])
 
             response = backend_response["answer"]
             citations = backend_response["citations"]       
