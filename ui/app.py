@@ -63,6 +63,52 @@ with st.sidebar:
 
         st.rerun()
 
+# =========================================================
+# JSON REQUEST BOX
+# =========================================================
+# JSON Customer Profile Input
+    st.subheader("Customer Profile JSON")
+
+
+#     if st.session_state.clear_json:
+
+#         st.session_state.json_request_box = ""
+
+#         st.session_state.clear_json = False
+
+
+#     json_request = st.text_area(
+#         "JSON Request",
+#         placeholder="""
+# {
+#   "customer_id": "CUST001",
+#   "age": 40,
+#   "income": 1200000
+# }
+#         """,
+#         height=250,
+#         key="json_request_box"
+#     )
+
+
+    if st.session_state.clear_json:
+
+        st.session_state.json_request_box = ""
+
+        st.session_state.clear_json = False
+
+
+    json_request = st.text_area(
+        "JSON Request",
+        placeholder="Json Request",
+        height=180,
+        key="json_request_box",
+        label_visibility="collapsed",
+    )
+
+
+
+
 
 # =========================================================
 # HEADER
@@ -151,53 +197,50 @@ if st.session_state.pending_request is not None:
 
             result = api_response.json()
 
-            # st.write("Backend result:", result)
+            # # Backend exception handling
+            if result.get("status") == "error":
 
-            backend_response = result["response"] #json.loads(result["response"])
+                error_message = result.get(
+                    "error",
+                    "Unknown backend error"
+                    )
 
-            response = backend_response["answer"]
-            citations = backend_response["citations"]       
-         
-            if backend_response["json_input"]:
-
-            # User input is JSON
-                add_bot_message(backend_response, None)
-
+                add_bot_message(
+                  f"Unexpected error:Please try again later",
+                   None
+                )
             else:
-            # User input is plain text
-                add_bot_message(response, citations)   
+
+                    # st.write("Backend result:", result)
+
+                    backend_response = result["response"] #json.loads(result["response"])
+
+                    response = backend_response["answer"]
+                    citations = backend_response["citations"]       
+                
+                    if backend_response["json_input"]:
+
+                    # User input is JSON
+                        add_bot_message(backend_response, None)
+
+                    else:
+                    # User input is plain text
+                        add_bot_message(response, citations)   
           
 
         except requests.exceptions.RequestException as e:
 
-            add_bot_message(f"Unable to process your request: {e}")
+             add_bot_message(f"Unable to process your request: Please try again later")
+
 
         finally:
 
             st.session_state.pending_request = None
 
-            st.session_state.clear_json = True
+            #st.session_state.clear_json = True
 
             st.rerun()
 
-# =========================================================
-# JSON REQUEST BOX
-# =========================================================
-
-if st.session_state.clear_json:
-
-    st.session_state.json_request_box = ""
-
-    st.session_state.clear_json = False
-
-
-json_request = st.text_area(
-    "JSON Request",
-    placeholder="Json Request",
-    height=80,
-    key="json_request_box",
-    label_visibility="collapsed",
-)
 # =========================================================
 # NATIVE STREAMLIT CHAT INPUT
 # =========================================================
