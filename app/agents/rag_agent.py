@@ -137,11 +137,18 @@ def answer_question(user_question: str, customer_profile_input: str = None):
                 is_json_input = True
 
 
-        except json.JSONDecodeError as e:
+        except Exception as e:  #json.JSONDecodeError as e:
 
             print("Invalid JSON:", str(e))
 
-            raise RuntimeError("error: Invalid customer profile JSON")
+            
+            #return "error Unable to process your request. Please try again later."
+
+            return {
+            "status": "error",
+            "error": "Unable to process your request. Please try again later."
+        }      
+
 
     try:
 
@@ -210,14 +217,13 @@ Rules:
 
     except Exception as e:
 
-        print(
-            "Agent invocation failed:",
-            repr(e)
-        )
+        print("Agent invocation failed:",repr(e))
 
-        return json.dumps({
+        #return "error Unable to process your request. Please try again later."
+
+        return {
+            "status": "error",
             "error": "Unable to process your request. Please try again later."
-        })
-
+        }      
 
 
